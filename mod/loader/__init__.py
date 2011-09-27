@@ -6,6 +6,7 @@ import mod.log
 
 log = mod.log.get(__name__)
 
+# This needs to be on top
 onloads = []
 def register_onload(func):
     log.debug("Registered onload %s.%s", func.__module__, func.__name__)
