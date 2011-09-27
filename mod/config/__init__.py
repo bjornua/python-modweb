@@ -2,6 +2,7 @@
 #
 # Should handle all configrelated stuffs
 #
+from mod.loader import register_onload
 from mod.config.config import Config
 
 config = Config()
@@ -10,6 +11,7 @@ config = Config()
 register = config.register_option
 get = config.get
 
+@register_onload
 def onload():
     try:
         config.load()
@@ -20,3 +22,4 @@ def onload():
     config.inputoptions()
 
     config.save()
+

@@ -1,6 +1,18 @@
 # -*- coding: utf-8 -*-
 from os.path import join, isfile, isdir, split, splitext
 from os import listdir
+from sys import stderr
+import mod.log
+
+log = mod.log.get(__name__)
+
+onloads = []
+def register_onload(func):
+    log.debug("Registered onload %s.%s" % (func.__module__,func.__name__))
+    print "test"
+    onloads.append(func)
+    return func
+    
 
 def loader():
     modulenames = []
@@ -36,17 +48,6 @@ def loader():
     
     print
 
-    onloads = []
-    for module in modules:
-        try:
-            onload = module.onload
-        except AttributeError:
-            continue
-
-        onloads.append((module.__name__ + ".onload", onload))
-
-    print "Found onloads: %s" % (", ".join(x[0] for x in onloads),)
-    print "Running onloads:"
-    for name, func in onloads:
-        print "  Running %s" % (name,)
+    print "Running onloads"
+    for func in onloads:
         func()

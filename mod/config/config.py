@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import mod.data
-
+from sys import stderr
 data = mod.data.Data("config")
 
 class Config(object):
@@ -22,6 +22,10 @@ class Config(object):
     
     def __setstate__(self, state):
         for name, optionstate in state["options"].items():
+            if not name in self.options:
+                stderr.write("Warning: Unrecognized option %s\n" % (name,))
+                continue
+
             self.options[name].__setstate__((name, optionstate))
     
     def inputoptions(self):
