@@ -8,8 +8,7 @@ log = mod.log.get(__name__)
 
 onloads = []
 def register_onload(func):
-    log.debug("Registered onload %s.%s" % (func.__module__,func.__name__))
-    print "test"
+    log.debug("Registered onload %s.%s", func.__module__, func.__name__)
     onloads.append(func)
     return func
     
@@ -37,17 +36,22 @@ def loader():
     # Sort names to make errors more predictable
     modulenames.sort()
 
-    print "Found modules: %s" % (", ".join("mod." + x for x in modulenames),)
+    log.info("Found modules: %s", ", ".join("mod." + x for x in modulenames))
     modules = []
 
-    print "Loading modules"
+    log.debug("Loading modules...")
     for name in modulenames:
-        print "  Loading mod.%s" % (name,)
-        module = __import__("mod." + name, globals(), locals(), [], -1).__getattribute__(name)
+        log.debug("Loading mod.%s", name)
+        try:
+            module = __import__("mod." + name, globals(), locals(), [], -1).__getattribute__(name)
+        except:
+            log.exception("Error loading module mod.%s", name)
+            exit()
         modules.append(module)
     
-    print
-
-    print "Running onloads"
+    log.debug("Running onloads")
     for func in onloads:
-        func()
+        try:
+            func()
+        except:
+            log.exception("Error when running onload %s.%s", func.__name__, func.__module__)

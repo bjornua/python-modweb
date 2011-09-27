@@ -18,7 +18,6 @@ def onload():
     except IOError:
         pass
     
-    print
     config.inputoptions()
 
     config.save()
