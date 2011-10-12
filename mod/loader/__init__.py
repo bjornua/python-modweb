@@ -6,14 +6,6 @@ import mod.log
 
 log = mod.log.get(__name__)
 
-# This needs to be on top
-onloads = []
-def register_onload(func):
-    log.debug("Registered onload %s.%s", func.__module__, func.__name__)
-    onloads.append(func)
-    return func
-    
-
 def loader():
     modulenames = []
     for node in listdir("mod"):
@@ -34,7 +26,7 @@ def loader():
         
         modulenames += [modulename]
     
-    # Sort names to make errors more predictable
+    # Sort names to make errors more predictable and output the same
     modulenames.sort()
 
     log.info("Found modules: %s", ", ".join("mod." + x for x in modulenames))
@@ -56,3 +48,4 @@ def loader():
             func()
         except:
             log.exception("Error when running onload %s.%s", func.__name__, func.__module__)
+            exit()
